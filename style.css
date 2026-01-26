@@ -51,11 +51,29 @@ nav a {
     color: #5a3a2e;
     font-weight: 500;
 }
+nav ul li a {
+    position: relative;
+    text-decoration: none;
+    color: #5a3a2e;
+    font-weight: 500;
+    padding-bottom: 5px;
+}
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #d07c5b;
+    transition: width 0.3s ease;
+}
 nav ul li a:hover {
     color: #d07c5b;
 }
 nav ul li a::after {
     background: #d07c5b;
+    width: 100%;
 }
 
 .btn {
@@ -138,6 +156,11 @@ section h2 {
 .features {
     background-color: #f7eae3;
     padding: 80px 20px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.feature:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
 
 .feature-box {
@@ -269,4 +292,5 @@ footer {
     padding: 25px;
     font-size: 14px;
 }
+
 
