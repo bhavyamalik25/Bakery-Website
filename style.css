@@ -180,7 +180,7 @@ section h2 {
     padding: 35px 25px;
     border-radius: 22px;
     text-align: center;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.08);
     transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
@@ -188,7 +188,6 @@ section h2 {
     transform: translateY(-8px) scale(1.03);
     box-shadow: 0 22px 45px rgba(0,0,0,0.15);
 }
-
 
 .feature h3 {
     font-size: 20px;
@@ -324,6 +323,7 @@ footer {
         padding: 6px 0;
     }
 }
+
 
 
 
