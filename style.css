@@ -9,7 +9,7 @@ scroll-behaviour:smooth;
 
 body{
     font-family:'Poppins',sans-serif;
-    background-color::#FFF7F2;
+    background-color:#FFF7F2;
     color:#5B3A2E;
     line-height:1.6;
 }
@@ -72,7 +72,7 @@ nav ul li a:hover::after{
     position:relative;
     text-align:center;
     padding:140px 20px;
-    background:url("download.jpeg") center/cover no-repeat;
+    background:url("hero-photo.jpeg") center/cover no-repeat;
     color:white;
 }
 
@@ -96,6 +96,14 @@ nav ul li a:hover::after{
 .hero p{
     font-size:20px;
     margin:15px 0 25px;
+}
+.hero-image {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    display: block;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
 .btn{
@@ -222,3 +230,4 @@ footer{
     margin-top:40px;
     color:#5B3A2E;
 }
+
