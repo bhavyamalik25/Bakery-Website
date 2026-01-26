@@ -152,15 +152,20 @@ section h2 {
 }
 
 /* ---------- FEATURES ---------- */
-.features {
-    background-color: #f7eae3;
-    padding: 80px 20px;
+/* WHY CHOOSE US — match MENU card hover exactly */
+.feature {
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 16px;
+    text-align: center;
     transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
+
 .feature:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    transform: translateY(-12px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
 }
+
 
 .feature-box {
     display: flex;
@@ -313,6 +318,7 @@ footer {
         padding: 6px 0;
     }
 }
+
 
 
 
