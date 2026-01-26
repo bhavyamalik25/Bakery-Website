@@ -1,4 +1,12 @@
 /* ---------- RESET ---------- */
+:root {
+    color-scheme: light;
+}
+html, body {
+    background-color: #f7eae3;
+    color: #5a3a2e;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -261,3 +269,4 @@ footer {
     padding: 25px;
     font-size: 14px;
 }
+
