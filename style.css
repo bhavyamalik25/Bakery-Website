@@ -71,8 +71,12 @@ nav ul li a:hover::after{
 .hero{
     position:relative;
     text-align:center;
-    padding:140px 20px;
-    background:url("hero-photo.jpeg") center/cover no-repeat;
+    padding:150px 20px;
+    background:url("images/hero-photo.jpeg") center/cover no-repeat;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color:white;
 }
 
@@ -83,7 +87,7 @@ nav ul li a:hover::after{
     background:rgba(0,0,0,0.45);
 }
 
-.hero *{
+.hero-content{
     position:relative;
 }
 
@@ -91,6 +95,7 @@ nav ul li a:hover::after{
     font-family:'Amatic SC', cursive;
     font-size:60px;
     letter-spacing:3px;
+    margin-bottom: 15px;
 }
 
 .hero p{
@@ -109,8 +114,8 @@ nav ul li a:hover::after{
 .btn{
     display:inline-block;
     padding:14px 32px;
-    background:#C97C5D;
-    color:white;
+    background:#F7C6C1;
+    color:#5B3A2E;
     text-decoration:none;
     border-radius:30px;
     font-weight:600;
@@ -118,8 +123,8 @@ nav ul li a:hover::after{
 }
 
 .btn:hover{
-    background:#5B3A2E;
-    color:white;
+    background:#F3AFA6;
+    color:#fff;
 }
 
 /* SECTIONS */
@@ -230,4 +235,5 @@ footer{
     margin-top:40px;
     color:#5B3A2E;
 }
+
 
