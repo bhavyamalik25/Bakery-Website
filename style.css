@@ -174,7 +174,6 @@ section h2 {
     margin-top: 40px;
     flex-wrap: wrap;
 }
-
 .feature {
     background-color: #ffffff;
     width: 300px;
@@ -182,7 +181,14 @@ section h2 {
     border-radius: 22px;
     text-align: center;
     box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
+
+.feature:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 22px 45px rgba(0,0,0,0.15);
+}
+
 
 .feature h3 {
     font-size: 20px;
@@ -318,6 +324,7 @@ footer {
         padding: 6px 0;
     }
 }
+
 
 
 
