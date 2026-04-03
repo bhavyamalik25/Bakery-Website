@@ -3,499 +3,546 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maplewood Bakery — Baked with Forest Magic</title>
+  <title>Maplewood Bakery</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:      #1C1208;
+      --bark:     #3D2200;
+      --chestnut: #7A4828;
+      --amber:    #C47830;
+      --honey:    #E2AA58;
+      --biscuit:  #E8D0A8;
+      --cream:    #F5ECD8;
+      --parchment:#FAF4E8;
+      --white:    #FFFDF7;
+      --sage:     #7A9878;
+      --ease: cubic-bezier(.25,.46,.45,.94);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--parchment); color:var(--ink); line-height:1.65; overflow-x:hidden; }
+    img { display:block; width:100%; height:100%; object-fit:cover; }
+    a { text-decoration:none; color:inherit; }
+    ul { list-style:none; }
+    button { font-family:inherit; cursor:pointer; }
+
+    /* NAV */
+    .nav { position:fixed; top:0; left:0; right:0; z-index:200; height:68px; display:flex; align-items:center; padding:0 52px; transition:background .4s,border-color .4s; border-bottom:1px solid transparent; }
+    .nav.stuck { background:rgba(250,244,232,.96); backdrop-filter:blur(10px); border-color:rgba(196,120,48,.15); }
+    .nav-inner { width:100%; display:flex; align-items:center; justify-content:space-between; }
+    .nav-logo { font-family:'Playfair Display',serif; font-size:21px; font-weight:700; color:var(--parchment); display:flex; align-items:center; gap:8px; transition:color .3s; }
+    .nav.stuck .nav-logo { color:var(--ink); }
+    .nav-links { display:flex; align-items:center; gap:36px; }
+    .nav-links a { font-size:13px; font-weight:500; letter-spacing:.4px; color:rgba(250,244,232,.75); transition:color .25s; position:relative; padding-bottom:2px; }
+    .nav.stuck .nav-links a { color:var(--chestnut); }
+    .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1.5px; background:var(--amber); transition:width .3s var(--ease); }
+    .nav-links a:hover::after { width:100%; }
+    .nav-links a:hover { color:var(--amber) !important; }
+    .nav-cta { background:var(--amber) !important; color:#fff !important; padding:9px 22px; border-radius:60px; font-size:13px !important; }
+    .nav-cta::after { display:none !important; }
+    .nav-cta:hover { background:var(--chestnut) !important; }
+    .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:4px; }
+    .hamburger span { display:block; width:22px; height:1.5px; background:var(--parchment); transition:all .3s; }
+    .nav.stuck .hamburger span { background:var(--ink); }
+    .mob-nav { display:none; position:fixed; inset:0; background:var(--ink); z-index:190; flex-direction:column; align-items:center; justify-content:center; gap:32px; }
+    .mob-nav.open { display:flex; }
+    .mob-nav a { font-family:'Playfair Display',serif; font-size:32px; font-weight:600; color:var(--cream); transition:color .2s; }
+    .mob-nav a:hover { color:var(--honey); }
+
+    /* BUTTONS */
+    .btn { display:inline-block; padding:13px 30px; border-radius:60px; font-size:14px; font-weight:500; transition:all .3s var(--ease); border:none; }
+    .btn-amber { background:var(--amber); color:#fff; }
+    .btn-amber:hover { background:var(--chestnut); transform:translateY(-2px); box-shadow:0 10px 28px rgba(196,120,48,.35); }
+    .btn-outline { background:transparent; color:rgba(245,236,216,.8); border:1.5px solid rgba(245,236,216,.25); }
+    .btn-outline:hover { background:rgba(245,236,216,.08); color:var(--cream); border-color:rgba(245,236,216,.5); transform:translateY(-2px); }
+
+    /* SECTION HELPERS */
+    .eyebrow { font-size:11px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--amber); margin-bottom:14px; }
+    .sh2 { font-family:'Playfair Display',serif; font-size:clamp(30px,4vw,50px); font-weight:600; line-height:1.15; color:var(--ink); margin-bottom:18px; }
+    .sh2 em { font-style:italic; color:var(--amber); }
+    .ssub { font-size:15px; color:var(--chestnut); opacity:.7; }
+
+    /* REVEAL */
+    .rv { opacity:0; transform:translateY(28px); transition:opacity .65s var(--ease),transform .65s var(--ease); }
+    .rv.in { opacity:1; transform:translateY(0); }
+    .rv.d1 { transition-delay:.08s; } .rv.d2 { transition-delay:.16s; } .rv.d3 { transition-delay:.24s; } .rv.d4 { transition-delay:.32s; }
+
+    /* HERO */
+    .hero { position:relative; min-height:100vh; background:var(--ink); display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:100px 80px 80px; gap:60px; overflow:hidden; }
+    .hero-glow { position:absolute; inset:0; background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(196,120,48,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 20% 80%,rgba(122,152,120,.08) 0%,transparent 60%); pointer-events:none; }
+    .hero-text { position:relative; z-index:2; }
+    .hero-tag { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--honey); border:1px solid rgba(226,170,88,.3); background:rgba(226,170,88,.08); padding:7px 16px; border-radius:60px; margin-bottom:28px; }
+    .hero-h1 { font-family:'Playfair Display',serif; font-size:clamp(42px,5.5vw,78px); font-weight:700; line-height:1.07; color:var(--cream); margin-bottom:24px; }
+    .hero-h1 em { font-style:italic; color:var(--honey); }
+    .hero-sub { font-size:16px; color:rgba(245,236,216,.55); line-height:1.8; max-width:380px; margin-bottom:40px; }
+    .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
+    .hero-imgcol { position:relative; z-index:2; display:flex; justify-content:center; }
+    .hero-frame { position:relative; width:100%; max-width:420px; }
+    .hero-frame img { width:100%; height:520px; border-radius:200px 200px 22px 22px; object-fit:cover; }
+    .hero-bdg { position:absolute; bottom:28px; left:-24px; background:var(--honey); color:var(--ink); padding:12px 18px; border-radius:14px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px; box-shadow:0 8px 24px rgba(0,0,0,.2); }
+    .hero-bdg2 { position:absolute; top:40px; right:-20px; background:var(--white); color:var(--chestnut); padding:10px 16px; border-radius:14px; font-size:12px; font-weight:500; box-shadow:0 6px 20px rgba(0,0,0,.15); text-align:center; line-height:1.4; }
+    .hero-bdg2 strong { display:block; font-family:'Playfair Display',serif; font-size:22px; color:var(--amber); }
+    .scroll-hint { position:absolute; bottom:36px; left:80px; display:flex; align-items:center; gap:12px; z-index:2; }
+    .scroll-hint span { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(245,236,216,.35); }
+    .scroll-line { width:50px; height:1px; background:linear-gradient(to right,rgba(196,120,48,.7),transparent); }
+
+    /* MARQUEE */
+    .marquee { background:var(--amber); overflow:hidden; padding:13px 0; white-space:nowrap; }
+    .mq-track { display:inline-flex; gap:56px; animation:mq 28s linear infinite; }
+    .mq-track span { font-family:'Cormorant Garamond',serif; font-size:19px; font-style:italic; color:#fff; flex-shrink:0; }
+    @keyframes mq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ABOUT */
+    .about { background:var(--white); padding:110px 80px; }
+    .about-grid { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+    .about-imgs { position:relative; height:480px; }
+    .about-a { position:absolute; top:0; left:0; width:72%; height:370px; border-radius:22px; overflow:hidden; box-shadow:0 16px 48px rgba(28,18,8,.15); }
+    .about-b { position:absolute; bottom:0; right:0; width:52%; height:230px; border-radius:14px; overflow:hidden; border:5px solid var(--white); box-shadow:0 8px 28px rgba(28,18,8,.12); }
+    .about-stat { position:absolute; top:44%; left:-20px; background:var(--ink); color:var(--cream); padding:18px 22px; border-radius:14px; text-align:center; box-shadow:0 8px 28px rgba(0,0,0,.25); z-index:3; }
+    .about-stat strong { display:block; font-family:'Playfair Display',serif; font-size:34px; color:var(--honey); line-height:1; }
+    .about-stat span { font-size:10px; letter-spacing:2px; text-transform:uppercase; opacity:.55; margin-top:4px; display:block; }
+    .about-body { font-size:15px; color:#5A3D20; line-height:1.85; margin-bottom:18px; }
+    .pills { display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+    .pill { background:var(--cream); border:1px solid rgba(122,72,40,.12); color:var(--chestnut); padding:7px 18px; border-radius:60px; font-size:13px; font-weight:500; transition:all .25s; }
+    .pill:hover { background:var(--ink); color:var(--cream); border-color:var(--ink); }
+
+    /* SPECIAL */
+    .special { background:var(--ink); padding:100px 80px; position:relative; overflow:hidden; }
+    .special::after { content:''; position:absolute; right:-120px; top:-120px; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(196,120,48,.13) 0%,transparent 65%); pointer-events:none; }
+    .special-grid { max-width:980px; margin:0 auto; display:grid; grid-template-columns:1fr 280px; gap:70px; align-items:center; position:relative; z-index:2; }
+    .sp-kicker { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--honey); font-weight:500; margin-bottom:16px; }
+    .sp-h2 { font-family:'Playfair Display',serif; font-size:clamp(38px,5vw,62px); font-weight:600; color:var(--cream); line-height:1.1; margin-bottom:20px; }
+    .sp-h2 em { color:var(--honey); }
+    .sp-desc { font-size:15px; color:rgba(245,236,216,.55); line-height:1.85; max-width:420px; margin-bottom:28px; }
+    .sp-row { display:flex; align-items:center; gap:18px; margin-bottom:32px; flex-wrap:wrap; }
+    .sp-price { font-family:'Playfair Display',serif; font-size:38px; font-weight:700; color:var(--honey); line-height:1; }
+    .sp-tag { font-size:12px; padding:5px 14px; border-radius:60px; background:rgba(196,120,48,.18); border:1px solid rgba(196,120,48,.35); color:var(--honey); }
+    .sp-img { width:240px; height:240px; border-radius:50%; background:rgba(196,120,48,.1); border:2px dashed rgba(196,120,48,.3); display:flex; align-items:center; justify-content:center; font-size:88px; flex-shrink:0; }
+
+    /* MENU */
+    .menu { background:var(--parchment); padding:110px 80px; }
+    .menu-head { text-align:center; margin-bottom:40px; }
+    .menu-head .ssub { margin:0 auto; text-align:center; }
+    .filters { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-bottom:48px; }
+    .filt { background:transparent; border:1.5px solid rgba(28,18,8,.14); color:#6B4A28; padding:8px 22px; border-radius:60px; font-size:13px; font-weight:500; transition:all .25s; }
+    .filt.on,.filt:hover { background:var(--ink); color:var(--cream); border-color:var(--ink); }
+    .mgrid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; max-width:1200px; margin:0 auto; }
+    .mcard { background:var(--white); border-radius:22px; overflow:hidden; border:1px solid rgba(28,18,8,.06); transition:transform .35s var(--ease),box-shadow .35s var(--ease); }
+    .mcard:hover { transform:translateY(-7px); box-shadow:0 20px 48px rgba(28,18,8,.13); }
+    .mcard.off { display:none; }
+    .mcard-img { position:relative; overflow:hidden; height:200px; }
+    .mcard-img img { width:100%; height:100%; transition:transform .5s var(--ease); }
+    .mcard:hover .mcard-img img { transform:scale(1.07); }
+    .mcard-ov { position:absolute; inset:0; background:rgba(28,18,8,.48); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s; }
+    .mcard:hover .mcard-ov { opacity:1; }
+    .mcard-ov a { background:var(--amber); color:#fff; padding:9px 22px; border-radius:60px; font-size:13px; font-weight:500; transform:translateY(8px); transition:transform .3s var(--ease); }
+    .mcard:hover .mcard-ov a { transform:translateY(0); }
+    .mcard-body { padding:15px 16px 18px; }
+    .mcard-cat { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--sage); font-weight:500; margin-bottom:6px; }
+    .mcard-body h3 { font-family:'Playfair Display',serif; font-size:15px; font-weight:600; color:var(--ink); line-height:1.3; margin-bottom:10px; }
+    .mcard-foot { display:flex; align-items:center; gap:8px; }
+    .mcard-price { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--amber); }
+    .mcard-note { font-size:12px; color:#9A7B5A; }
+
+    /* GALLERY */
+    .gallery { background:var(--white); padding:110px 80px; }
+    .gallery-head { text-align:center; margin-bottom:56px; }
+    .ggrid { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:240px 240px; gap:14px; max-width:1100px; margin:0 auto; }
+    .gi { position:relative; border-radius:22px; overflow:hidden; }
+    .gi img { width:100%; height:100%; object-fit:cover; transition:transform .55s var(--ease); }
+    .gi:hover img { transform:scale(1.07); }
+    .gi.tall { grid-row:span 2; }
+    .gi.wide { grid-column:span 2; }
+    .gcap { position:absolute; bottom:0; left:0; right:0; padding:28px 18px 16px; background:linear-gradient(to top,rgba(28,18,8,.72) 0%,transparent 100%); color:#fff; font-family:'Cormorant Garamond',serif; font-size:19px; font-style:italic; opacity:0; transform:translateY(6px); transition:all .35s var(--ease); }
+    .gi:hover .gcap { opacity:1; transform:translateY(0); }
+
+    /* TESTIMONIALS */
+    .testi { background:var(--ink); padding:110px 80px; }
+    .testi-inner { max-width:1100px; margin:0 auto; }
+    .testi .eyebrow { color:var(--honey); }
+    .testi .sh2 { color:var(--cream); }
+    .testi .sh2 em { color:var(--honey); }
+    .tgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:56px; }
+    .tc { background:rgba(255,255,255,.04); border:1px solid rgba(245,236,216,.08); border-radius:22px; padding:30px; transition:transform .3s var(--ease),border-color .3s; }
+    .tc:hover { transform:translateY(-5px); border-color:rgba(196,120,48,.3); }
+    .tc.feat { background:rgba(196,120,48,.1); border-color:rgba(196,120,48,.28); transform:translateY(-8px); }
+    .tc.feat:hover { transform:translateY(-13px); }
+    .tc-stars { color:var(--honey); font-size:14px; letter-spacing:3px; margin-bottom:14px; }
+    .tc-txt { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:rgba(245,236,216,.82); line-height:1.7; margin-bottom:22px; }
+    .tc-auth { display:flex; align-items:center; gap:12px; }
+    .tc-av { width:40px; height:40px; border-radius:50%; background:rgba(196,120,48,.22); border:1.5px solid rgba(196,120,48,.35); color:var(--honey); font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .tc-name { font-weight:500; font-size:13px; color:var(--cream); margin:0; }
+    .tc-loc { font-size:12px; color:rgba(245,236,216,.38); margin:0; }
+
+    /* ORDER */
+    .order { background:var(--cream); padding:110px 80px; }
+    .order-grid { max-width:1080px; margin:0 auto; display:grid; grid-template-columns:1fr 1.25fr; gap:80px; align-items:start; }
+    .order-h2 { font-family:'Playfair Display',serif; font-size:clamp(32px,3.8vw,50px); font-weight:600; line-height:1.18; color:var(--ink); margin-bottom:18px; }
+    .order-h2 em { font-style:italic; color:var(--amber); }
+    .order-desc { font-size:15px; color:#5A3D20; line-height:1.85; margin-bottom:36px; }
+    .cinfo { display:flex; flex-direction:column; gap:16px; }
+    .crow { display:flex; align-items:flex-start; gap:14px; font-size:14px; color:#6B4A28; }
+    .crow a { color:var(--amber); }
+    .crow a:hover { color:var(--chestnut); }
+    .crow .ico { font-size:17px; flex-shrink:0; margin-top:1px; }
+    .oform { background:var(--parchment); border-radius:28px; padding:38px 36px; border:1px solid rgba(28,18,8,.07); box-shadow:0 8px 40px rgba(28,18,8,.09); }
+    .frow { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .fgrp { display:flex; flex-direction:column; gap:6px; margin-bottom:18px; }
+    .fgrp label { font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:#9A7B5A; }
+    .fgrp input,.fgrp select,.fgrp textarea { background:var(--white); border:1.5px solid rgba(28,18,8,.1); border-radius:14px; padding:11px 14px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--ink); outline:none; transition:border-color .25s; width:100%; -webkit-appearance:none; }
+    .fgrp input:focus,.fgrp select:focus,.fgrp textarea:focus { border-color:var(--amber); }
+    .fgrp textarea { min-height:88px; resize:vertical; }
+    .fsub { width:100%; padding:14px; font-size:14px; font-weight:500; border:none; margin-top:4px; }
+    .fnote { font-size:12px; color:#9A7B5A; text-align:center; margin-top:10px; }
+    .suc { display:none; text-align:center; padding:56px 32px; }
+    .suc.show { display:block; }
+    .suc .sico { font-size:52px; margin-bottom:14px; }
+    .suc h3 { font-family:'Playfair Display',serif; font-size:26px; color:var(--ink); margin-bottom:10px; }
+    .suc p { font-size:14px; color:#6B4A28; }
+
+    /* NEWSLETTER */
+    .nl { background:var(--amber); padding:80px; text-align:center; position:relative; overflow:hidden; }
+    .nl::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 50% 80% at 20% 50%,rgba(255,255,255,.1) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 80% 50%,rgba(28,18,8,.1) 0%,transparent 60%); pointer-events:none; }
+    .nl-in { position:relative; z-index:2; }
+    .nl h2 { font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,48px); font-weight:600; color:#fff; margin-bottom:10px; }
+    .nl p { font-size:15px; color:rgba(255,255,255,.8); margin-bottom:28px; }
+    .nl-form { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; max-width:460px; margin:0 auto; }
+    .nl-form input { flex:1; min-width:210px; padding:13px 20px; border-radius:60px; border:none; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--ink); outline:none; }
+    .nl-form button { background:var(--ink); color:var(--cream); border:none; padding:13px 26px; border-radius:60px; font-size:14px; font-weight:500; transition:background .25s,transform .25s; }
+    .nl-form button:hover { background:var(--bark); transform:translateY(-2px); }
+    .nl-thanks { font-size:15px; color:rgba(255,255,255,.95); font-style:italic; margin-top:12px; }
+
+    /* FOOTER */
+    .footer { background:var(--ink); padding:60px 80px 28px; }
+    .footer-top { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px; padding-bottom:44px; border-bottom:1px solid rgba(245,236,216,.07); }
+    .f-logo { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:var(--cream); display:block; margin-bottom:10px; }
+    .footer-brand p { font-size:13px; color:rgba(245,236,216,.38); line-height:1.7; }
+    .fcol h4 { font-size:11px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:rgba(245,236,216,.4); margin-bottom:16px; }
+    .fcol a { display:block; font-size:14px; color:rgba(245,236,216,.55); margin-bottom:10px; transition:color .2s; }
+    .fcol a:hover { color:var(--honey); }
+    .footer-btm { max-width:1100px; margin:0 auto; padding-top:22px; font-size:12px; color:rgba(245,236,216,.25); text-align:center; }
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){ .mgrid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:860px){
+      .nav{padding:0 24px;} .nav-links{display:none;} .hamburger{display:flex;}
+      .hero{grid-template-columns:1fr;padding:100px 32px 64px;text-align:center;min-height:auto;}
+      .hero-imgcol{display:none;} .hero-btns{justify-content:center;} .scroll-hint{left:32px;}
+      .about{padding:80px 32px;} .about-grid{grid-template-columns:1fr;gap:48px;}
+      .about-imgs{height:300px;} .about-a{width:68%;height:260px;} .about-b{width:50%;height:180px;} .about-stat{left:-10px;padding:14px 16px;}
+      .special{padding:80px 32px;} .special-grid{grid-template-columns:1fr;} .sp-img{display:none;}
+      .menu{padding:80px 32px;}
+      .gallery{padding:80px 32px;} .ggrid{grid-template-columns:1fr 1fr;grid-template-rows:auto;} .gi{height:220px;} .gi.tall{grid-row:unset;} .gi.wide{grid-column:unset;}
+      .testi{padding:80px 32px;} .tgrid{grid-template-columns:1fr;} .tc.feat{transform:none;}
+      .order{padding:80px 32px;} .order-grid{grid-template-columns:1fr;gap:48px;}
+      .nl{padding:64px 32px;} .footer{padding:48px 32px 24px;} .footer-top{grid-template-columns:1fr;gap:28px;}
+    }
+    @media(max-width:540px){
+      .mgrid{grid-template-columns:1fr;} .ggrid{grid-template-columns:1fr;} .gi.wide{grid-column:unset;}
+      .frow{grid-template-columns:1fr;} .oform{padding:28px 20px;}
+      .hero{padding:88px 20px 56px;}
+    }
+  </style>
 </head>
 <body>
 
-<!-- FLOATING LEAVES CANVAS -->
-<canvas id="leavesCanvas"></canvas>
-
-<!-- CURSOR -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-follower" id="cursorFollower"></div>
-
 <!-- NAV -->
-<header id="header">
-  <nav>
-    <a href="#" class="nav-logo">
-      <span class="logo-leaf">🍂</span>
-      <span>Maplewood</span>
-    </a>
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo"><span>🍂</span>Maplewood</a>
     <ul class="nav-links">
       <li><a href="#about">Our Story</a></li>
       <li><a href="#menu">Menu</a></li>
       <li><a href="#gallery">Kitchen</a></li>
       <li><a href="#order" class="nav-cta">Order Now</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+    <button class="hamburger" id="hbg"><span></span><span></span><span></span></button>
+  </div>
 </header>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <ul>
-    <li><a href="#about" class="mm-link">Our Story</a></li>
-    <li><a href="#menu" class="mm-link">Menu</a></li>
-    <li><a href="#gallery" class="mm-link">Kitchen</a></li>
-    <li><a href="#order" class="mm-link">Order Now</a></li>
-  </ul>
-</div>
+<nav class="mob-nav" id="mobnav">
+  <a href="#about"   class="ml">Our Story</a>
+  <a href="#menu"    class="ml">Menu</a>
+  <a href="#gallery" class="ml">Kitchen</a>
+  <a href="#order"   class="ml">Order Now</a>
+</nav>
 
 <!-- HERO -->
-<section class="hero" id="hero">
-  <div class="hero-bg-text">MAPLEWOOD</div>
-  <div class="hero-inner">
-    <div class="hero-tag reveal-up">Est. 2019 · Maplewood Town</div>
-    <h1 class="hero-title reveal-up">
-      <span class="line-1">Where Every</span>
-      <span class="line-2"><em>Crumb</em> Tells a</span>
-      <span class="line-3">Story.</span>
-    </h1>
-    <p class="hero-sub reveal-up">Small-batch baked goods made from scratch,<br>with forest-fresh ingredients & a whole lot of heart.</p>
-    <div class="hero-actions reveal-up">
-      <a href="#menu" class="btn-primary">Explore Menu</a>
-      <a href="#order" class="btn-ghost">Reserve a Special</a>
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-text">
+    <div class="hero-tag">🍂 Est. 2019 · Maplewood Town</div>
+    <h1 class="hero-h1">Where every<br><em>crumb</em> tells<br>a story.</h1>
+    <p class="hero-sub">Small-batch, hand-made baked goods using organic ingredients and a whole lot of heart.</p>
+    <div class="hero-btns">
+      <a href="#menu"  class="btn btn-amber">Explore Menu</a>
+      <a href="#order" class="btn btn-outline">Reserve a Special</a>
     </div>
   </div>
-  <div class="hero-scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
-  <div class="hero-img-wrap">
-    <div class="hero-img-frame">
-      <img src="images/cinnamonbun.jpg" alt="Fresh from the oven" class="hero-img">
-      <div class="hero-img-badge">
-        <span class="badge-emoji">✦</span>
-        <span>Baked Fresh Daily</span>
-      </div>
+  <div class="hero-imgcol">
+    <div class="hero-frame">
+      <img src="images/cinnamonbun.jpg" alt="Fresh cinnamon buns">
+      <div class="hero-bdg">✦ Baked Fresh Daily</div>
+      <div class="hero-bdg2"><strong>5+</strong>Years of Baking</div>
     </div>
   </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
 
 <!-- MARQUEE -->
-<div class="marquee-strip">
-  <div class="marquee-track">
-    <span>✦ Baked at Dawn</span>
-    <span>✦ Organic Ingredients</span>
-    <span>✦ Small Batch Magic</span>
-    <span>✦ Open Weekends Till 10 PM</span>
-    <span>✦ Seasonal Specials</span>
-    <span>✦ Custom Cakes Welcome</span>
-    <span>✦ Baked at Dawn</span>
-    <span>✦ Organic Ingredients</span>
-    <span>✦ Small Batch Magic</span>
-    <span>✦ Open Weekends Till 10 PM</span>
-    <span>✦ Seasonal Specials</span>
-    <span>✦ Custom Cakes Welcome</span>
+<div class="marquee">
+  <div class="mq-track">
+    <span>✦ Baked at Dawn</span><span>✦ Organic Ingredients</span><span>✦ Small Batch Magic</span><span>✦ Open Weekends Till 10 PM</span><span>✦ Seasonal Specials</span><span>✦ Custom Cakes Welcome</span>
+    <span>✦ Baked at Dawn</span><span>✦ Organic Ingredients</span><span>✦ Small Batch Magic</span><span>✦ Open Weekends Till 10 PM</span><span>✦ Seasonal Specials</span><span>✦ Custom Cakes Welcome</span>
   </div>
 </div>
 
 <!-- ABOUT -->
-<section id="about" class="about">
-  <div class="about-inner">
-    <div class="about-img-col">
-      <div class="about-img-stack">
-        <div class="about-img-main">
-          <img src="images/croissant.jfif" alt="Our Kitchen">
-        </div>
-        <div class="about-img-accent">
-          <img src="images/blueberry-muffin.jfif" alt="Muffins">
-        </div>
-        <div class="about-stat-card">
-          <span class="stat-num">5+</span>
-          <span class="stat-label">Years of Baking</span>
-        </div>
-      </div>
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-imgs rv">
+      <div class="about-a"><img src="images/croissant.jfif" alt="Croissants"></div>
+      <div class="about-b"><img src="images/blueberry-muffin.jfif" alt="Muffins"></div>
+      <div class="about-stat"><strong>5+</strong><span>Years Baking</span></div>
     </div>
-    <div class="about-text-col">
-      <div class="section-eyebrow reveal-up">Our Story</div>
-      <h2 class="section-title reveal-up">A little bakery at<br><em>the edge of the woods.</em></h2>
-      <p class="about-body reveal-up">
-        Maplewood Bakery was born on a cold October morning in a kitchen that smelled of cinnamon and old books. We bake everything by hand — no shortcuts, no preservatives, just premium organic ingredients and recipes passed down through seasons.
-      </p>
-      <p class="about-body reveal-up">
-        Come in, stay a while. Let the smell of fresh bread and the crackle of the oven remind you that some things are still made with love.
-      </p>
-      <div class="about-values reveal-up">
-        <div class="value-pill">🌿 Organic</div>
-        <div class="value-pill">🪵 Small Batch</div>
-        <div class="value-pill">🤍 Handmade</div>
-        <div class="value-pill">🍂 Seasonal</div>
+    <div>
+      <p class="eyebrow rv">Our Story</p>
+      <h2 class="sh2 rv d1">A little bakery at<br><em>the edge of the woods.</em></h2>
+      <p class="about-body rv d2">Maplewood Bakery was born on a cold October morning in a kitchen that smelled of cinnamon and old books. We bake everything by hand — no shortcuts, no preservatives, just premium organic ingredients and recipes passed down through seasons.</p>
+      <p class="about-body rv d3">Come in, stay a while. Let the smell of fresh bread and the crackle of the oven remind you that some things are still made with love.</p>
+      <div class="pills rv d4">
+        <span class="pill">🌿 Organic</span>
+        <span class="pill">🪵 Small Batch</span>
+        <span class="pill">🤍 Handmade</span>
+        <span class="pill">🍂 Seasonal</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TODAY'S SPECIAL -->
-<section class="special-section">
-  <div class="special-inner">
-    <div class="special-left">
-      <div class="special-eyebrow">✦ Today's Special</div>
-      <h2 class="special-title">Strawberry<br><em>Rose Tart</em></h2>
-      <p class="special-desc">A buttery shortcrust shell, silky vanilla pastry cream, fresh strawberries, and a delicate rose glaze. Made in small batches — every single morning.</p>
-      <div class="special-meta">
-        <span class="special-price">₹320</span>
-        <span class="special-badge-tag">🌹 Limited Daily</span>
+<!-- SPECIAL -->
+<section class="special">
+  <div class="special-grid">
+    <div>
+      <p class="sp-kicker rv">✦ Today's Special</p>
+      <h2 class="sp-h2 rv d1">Strawberry<br><em>Rose Tart</em></h2>
+      <p class="sp-desc rv d2">A buttery shortcrust shell, silky vanilla pastry cream, fresh strawberries and a delicate rose glaze — made in small batches every single morning.</p>
+      <div class="sp-row rv d3">
+        <span class="sp-price">₹320</span>
+        <span class="sp-tag">🌹 Limited Daily</span>
       </div>
-      <a href="#order" class="btn-primary">Reserve Yours →</a>
+      <a href="#order" class="btn btn-amber rv d4">Reserve Yours →</a>
     </div>
-    <div class="special-right">
-      <div class="special-img-circle">
-        <span class="special-emoji">🍓</span>
-      </div>
-      <div class="special-deco-ring"></div>
-    </div>
+    <div class="sp-img rv">🍓</div>
   </div>
 </section>
 
 <!-- MENU -->
-<section id="menu" class="menu-section">
-  <div class="menu-header">
-    <div class="section-eyebrow reveal-up">What We Make</div>
-    <h2 class="section-title reveal-up">The Maplewood <em>Menu</em></h2>
-    <p class="section-sub reveal-up">Everything is baked fresh that morning. If it's gone, it's gone.</p>
+<section class="menu" id="menu">
+  <div class="menu-head">
+    <p class="eyebrow rv">What We Make</p>
+    <h2 class="sh2 rv d1">The Maplewood <em>Menu</em></h2>
+    <p class="ssub rv d2" style="text-align:center;margin:0 auto 0;">Everything baked fresh that morning. If it's gone, it's gone.</p>
   </div>
-
-  <div class="menu-filters reveal-up">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="baked">Baked Goods</button>
-    <button class="filter-btn" data-filter="savoury">Savoury</button>
-    <button class="filter-btn" data-filter="drinks">Drinks</button>
+  <div class="filters rv">
+    <button class="filt on" data-f="all">All</button>
+    <button class="filt" data-f="baked">Baked Goods</button>
+    <button class="filt" data-f="savoury">Savoury</button>
+    <button class="filt" data-f="drinks">Drinks</button>
   </div>
-
-  <div class="menu-grid">
-    <div class="menu-card reveal-up" data-cat="baked">
-      <div class="menu-card-img">
-        <img src="images/cinnamonbun.jpg" alt="Cinnamon Buns">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Baked Goods</span>
-        <h3>Cinnamon Buns</h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹250</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">Freshly glazed</span>
-        </div>
-      </div>
+  <div class="mgrid">
+    <div class="mcard rv" data-cat="baked">
+      <div class="mcard-img"><img src="images/cinnamonbun.jpg" alt="Cinnamon Buns"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Baked Goods</p><h3>Cinnamon Buns</h3><div class="mcard-foot"><span class="mcard-price">₹250</span><span class="mcard-note">· Freshly glazed</span></div></div>
     </div>
-
-    <div class="menu-card reveal-up" data-cat="baked">
-      <div class="menu-card-img">
-        <img src="images/shortbread.jfif" alt="Shortbread Cookies">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Baked Goods</span>
-        <h3>Butter Shortbread Cookies</h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹250</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">Melt-in-mouth</span>
-        </div>
-      </div>
+    <div class="mcard rv d1" data-cat="baked">
+      <div class="mcard-img"><img src="images/shortbread.jfif" alt="Shortbread"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Baked Goods</p><h3>Butter Shortbread Cookies</h3><div class="mcard-foot"><span class="mcard-price">₹250</span><span class="mcard-note">· Melt-in-mouth</span></div></div>
     </div>
-
-    <div class="menu-card reveal-up" data-cat="baked">
-      <div class="menu-card-img">
-        <img src="images/blueberry-muffin.jfif" alt="Blueberry Walnut Muffin">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Baked Goods</span>
-        <h3>Blueberry Walnut Muffin</h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹180</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">Morning favourite</span>
-        </div>
-      </div>
+    <div class="mcard rv d2" data-cat="baked">
+      <div class="mcard-img"><img src="images/blueberry-muffin.jfif" alt="Muffin"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Baked Goods</p><h3>Blueberry Walnut Muffin</h3><div class="mcard-foot"><span class="mcard-price">₹180</span><span class="mcard-note">· Morning fav</span></div></div>
     </div>
-
-    <div class="menu-card reveal-up" data-cat="savoury">
-      <div class="menu-card-img">
-        <img src="images/Chicken-pesto.jpg" alt="Hummus Pesto Chicken Sandwich">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Savoury</span>
-        <h3>Hummus & Pesto Chicken Sandwich</h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹400</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">Staff favourite</span>
-        </div>
-      </div>
+    <div class="mcard rv d3" data-cat="savoury">
+      <div class="mcard-img"><img src="images/Chicken-pesto.jpg" alt="Chicken Sandwich"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Savoury</p><h3>Hummus & Pesto Chicken Sandwich</h3><div class="mcard-foot"><span class="mcard-price">₹400</span><span class="mcard-note">· Staff pick</span></div></div>
     </div>
-
-    <div class="menu-card reveal-up" data-cat="savoury">
-      <div class="menu-card-img">
-        <img src="images/salmon-avo.jfif" alt="Smoked Salmon Avocado Tartine">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Savoury</span>
-        <h3>Smoked Salmon & Avocado Tartine</h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹549</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">Weekend special</span>
-        </div>
-      </div>
+    <div class="mcard rv" data-cat="savoury">
+      <div class="mcard-img"><img src="images/salmon-avo.jfif" alt="Tartine"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Savoury</p><h3>Smoked Salmon & Avocado Tartine</h3><div class="mcard-foot"><span class="mcard-price">₹549</span><span class="mcard-note">· Weekend special</span></div></div>
     </div>
-
-    <div class="menu-card reveal-up" data-cat="savoury">
-      <div class="menu-card-img">
-        <img src="images/croissant.jfif" alt="Croissant Sandwich">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Savoury</span>
-        <h3>Croissant Sandwich</h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹300</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">Buttery & crisp</span>
-        </div>
-      </div>
+    <div class="mcard rv d1" data-cat="savoury">
+      <div class="mcard-img"><img src="images/croissant.jfif" alt="Croissant"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Savoury</p><h3>Croissant Sandwich</h3><div class="mcard-foot"><span class="mcard-price">₹300</span><span class="mcard-note">· Buttery & crisp</span></div></div>
     </div>
-
-    <div class="menu-card reveal-up" data-cat="savoury">
-      <div class="menu-card-img">
-        <img src="images/pizza-slice.jfif" alt="B's Special">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Savoury</span>
-        <h3>B's Special <span class="sub-note">(Butter Chicken Margherita)</span></h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹300</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">House secret</span>
-        </div>
-      </div>
+    <div class="mcard rv d2" data-cat="savoury">
+      <div class="mcard-img"><img src="images/pizza-slice.jfif" alt="B's Special"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Savoury</p><h3>B's Special <small style="font-size:12px;font-weight:400;color:#9A7B5A;">(Butter Chicken Margherita)</small></h3><div class="mcard-foot"><span class="mcard-price">₹300</span><span class="mcard-note">· House secret</span></div></div>
     </div>
-
-    <div class="menu-card reveal-up" data-cat="drinks">
-      <div class="menu-card-img">
-        <img src="images/passion-mango.jfif" alt="Passionfruit Mango Spritz">
-        <div class="card-overlay">
-          <a href="#order" class="overlay-btn">Reserve</a>
-        </div>
-      </div>
-      <div class="menu-card-body">
-        <span class="menu-tag">Drinks</span>
-        <h3>Passionfruit & Mango Spritz</h3>
-        <div class="menu-card-footer">
-          <span class="menu-price">₹299</span>
-          <span class="menu-dot">·</span>
-          <span class="menu-note">Summer in a glass</span>
-        </div>
-      </div>
+    <div class="mcard rv d3" data-cat="drinks">
+      <div class="mcard-img"><img src="images/passion-mango.jfif" alt="Spritz"><div class="mcard-ov"><a href="#order">Reserve</a></div></div>
+      <div class="mcard-body"><p class="mcard-cat">Drinks</p><h3>Passionfruit & Mango Spritz</h3><div class="mcard-foot"><span class="mcard-price">₹299</span><span class="mcard-note">· Summer in a glass</span></div></div>
     </div>
   </div>
 </section>
 
 <!-- GALLERY -->
-<section id="gallery" class="gallery-section">
-  <div class="gallery-header">
-    <div class="section-eyebrow reveal-up">From Our Kitchen</div>
-    <h2 class="section-title reveal-up">A peek behind<br><em>the oven door.</em></h2>
+<section class="gallery" id="gallery">
+  <div class="gallery-head">
+    <p class="eyebrow rv">From Our Kitchen</p>
+    <h2 class="sh2 rv d1">A peek behind<br><em>the oven door.</em></h2>
   </div>
-  <div class="gallery-grid">
-    <div class="gallery-item tall reveal-up">
-      <img src="images/cinnamonbun.jpg" alt="Morning Batch">
-      <div class="gallery-caption">Morning Batch ☀️</div>
-    </div>
-    <div class="gallery-item reveal-up">
-      <img src="images/blueberry-muffin.jfif" alt="Blueberry Days">
-      <div class="gallery-caption">Blueberry Days 🫐</div>
-    </div>
-    <div class="gallery-item reveal-up">
-      <img src="images/shortbread.jfif" alt="Butter & Love">
-      <div class="gallery-caption">Butter & Love 🧈</div>
-    </div>
-    <div class="gallery-item wide reveal-up">
-      <img src="images/croissant.jfif" alt="Weekend Vibes">
-      <div class="gallery-caption">Weekend Vibes 🥐</div>
-    </div>
-    <div class="gallery-item reveal-up">
-      <img src="images/passion-mango.jfif" alt="Sip Season">
-      <div class="gallery-caption">Sip Season 🥭</div>
-    </div>
+  <div class="ggrid">
+    <div class="gi tall rv"><img src="images/cinnamonbun.jpg" alt="Morning Batch"><div class="gcap">Morning Batch ☀️</div></div>
+    <div class="gi rv d1"><img src="images/blueberry-muffin.jfif" alt="Blueberry Days"><div class="gcap">Blueberry Days 🫐</div></div>
+    <div class="gi rv d2"><img src="images/shortbread.jfif" alt="Butter & Love"><div class="gcap">Butter & Love 🧈</div></div>
+    <div class="gi wide rv d1"><img src="images/croissant.jfif" alt="Weekend Vibes"><div class="gcap">Weekend Vibes 🥐</div></div>
+    <div class="gi rv d3"><img src="images/passion-mango.jfif" alt="Sip Season"><div class="gcap">Sip Season 🥭</div></div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="testimonials-section">
-  <div class="testimonials-inner">
-    <div class="section-eyebrow reveal-up">Word Around Town</div>
-    <h2 class="section-title reveal-up">People are <em>talking.</em></h2>
-    <div class="testimonials-grid">
-      <div class="testi-card reveal-up">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"The cinnamon buns are genuinely life-changing. I come here every Saturday morning and I never regret it."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">P</div>
-          <div>
-            <p class="testi-name">Priya M.</p>
-            <p class="testi-loc">New Delhi</p>
-          </div>
-        </div>
+<section class="testi">
+  <div class="testi-inner">
+    <p class="eyebrow rv">Word Around Town</p>
+    <h2 class="sh2 rv d1">People are <em>talking.</em></h2>
+    <div class="tgrid">
+      <div class="tc rv">
+        <div class="tc-stars">★★★★★</div>
+        <p class="tc-txt">"The cinnamon buns are genuinely life-changing. I come here every Saturday morning and I never regret it."</p>
+        <div class="tc-auth"><div class="tc-av">P</div><div><p class="tc-name">Priya M.</p><p class="tc-loc">New Delhi</p></div></div>
       </div>
-      <div class="testi-card testi-featured reveal-up">
-        <div class="testi-quote-mark">"</div>
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Ordered a custom cake for my mom's birthday and cried when I saw it. So beautiful, so delicious. Maplewood forever."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">A</div>
-          <div>
-            <p class="testi-name">Ananya R.</p>
-            <p class="testi-loc">Gurugram</p>
-          </div>
-        </div>
+      <div class="tc feat rv d1">
+        <div class="tc-stars">★★★★★</div>
+        <p class="tc-txt">"Ordered a custom cake for my mom's birthday and cried when I saw it. So beautiful, so delicious. Maplewood forever."</p>
+        <div class="tc-auth"><div class="tc-av">A</div><div><p class="tc-name">Ananya R.</p><p class="tc-loc">Gurugram</p></div></div>
       </div>
-      <div class="testi-card reveal-up">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"The butter chicken pizza slice is unexpected and AMAZING. This place has no right to be this good."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">K</div>
-          <div>
-            <p class="testi-name">Kabir S.</p>
-            <p class="testi-loc">Noida</p>
-          </div>
-        </div>
+      <div class="tc rv d2">
+        <div class="tc-stars">★★★★★</div>
+        <p class="tc-txt">"The butter chicken pizza slice is unexpected and AMAZING. This place has no right to be this good."</p>
+        <div class="tc-auth"><div class="tc-av">K</div><div><p class="tc-name">Kabir S.</p><p class="tc-loc">Noida</p></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ORDER / CONTACT -->
-<section id="order" class="order-section">
-  <div class="order-inner">
-    <div class="order-left">
-      <div class="section-eyebrow">Place an Order</div>
-      <h2 class="order-title">Reserve something<br><em>special.</em></h2>
-      <p class="order-desc">Pre-order your favourites, request a custom cake, or just let us know you're coming. We'll have it warm and ready.</p>
-      <div class="contact-info">
-        <div class="contact-row">
-          <span class="contact-icon">📧</span>
-          <a href="mailto:hello@maplewoodbakery.com">hello@maplewoodbakery.com</a>
-        </div>
-        <div class="contact-row">
-          <span class="contact-icon">📞</span>
-          <a href="tel:+919811144441">+91 98111 4441</a>
-        </div>
-        <div class="contact-row">
-          <span class="contact-icon">🕐</span>
-          <div>
-            <p>Mon–Fri: 8:00 AM – 9:00 PM</p>
-            <p>Sat–Sun: 9:00 AM – 10:00 PM</p>
-          </div>
-        </div>
+<!-- ORDER -->
+<section class="order" id="order">
+  <div class="order-grid">
+    <div>
+      <p class="eyebrow rv">Place an Order</p>
+      <h2 class="order-h2 rv d1">Reserve something <em>special.</em></h2>
+      <p class="order-desc rv d2">Pre-order your favourites, request a custom cake, or just let us know you're coming. We'll have it warm and ready.</p>
+      <div class="cinfo rv d3">
+        <div class="crow"><span class="ico">📧</span><a href="mailto:hello@maplewoodbakery.com">hello@maplewoodbakery.com</a></div>
+        <div class="crow"><span class="ico">📞</span><a href="tel:+919811144441">+91 98111 4441</a></div>
+        <div class="crow"><span class="ico">🕐</span><div><p>Mon–Fri: 8:00 AM – 9:00 PM</p><p>Sat–Sun: 9:00 AM – 10:00 PM</p></div></div>
       </div>
     </div>
-    <div class="order-right">
-      <form class="order-form" id="orderForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Your Name</label>
-            <input type="text" placeholder="e.g. Priya Sharma" required>
-          </div>
-          <div class="form-group">
-            <label>Phone / Email</label>
-            <input type="text" placeholder="How can we reach you?" required>
-          </div>
+    <div class="rv d1">
+      <form class="oform" id="oForm">
+        <div class="frow">
+          <div class="fgrp"><label>Your Name</label><input type="text" placeholder="e.g. Priya Sharma" required></div>
+          <div class="fgrp"><label>Phone / Email</label><input type="text" placeholder="How can we reach you?" required></div>
         </div>
-        <div class="form-group">
+        <div class="fgrp">
           <label>What would you like?</label>
           <select>
-            <option value="">Choose an item...</option>
+            <option value="">Choose an item…</option>
             <option>Cinnamon Buns — ₹250</option>
             <option>Butter Shortbread Cookies — ₹250</option>
             <option>Blueberry Walnut Muffin — ₹180</option>
             <option>Hummus & Pesto Chicken Sandwich — ₹400</option>
             <option>Smoked Salmon & Avocado Tartine — ₹549</option>
             <option>Croissant Sandwich — ₹300</option>
-            <option>B's Special — ₹300</option>
+            <option>B's Special (Butter Chicken Margherita) — ₹300</option>
             <option>Passionfruit & Mango Spritz — ₹299</option>
-            <option>Strawberry Rose Tart (Today's Special) — ₹320</option>
+            <option>Strawberry Rose Tart — ₹320</option>
             <option>Custom Cake Order</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Any notes or special requests?</label>
-          <textarea placeholder="Dietary needs, pickup time, custom message on a cake..."></textarea>
-        </div>
-        <button type="submit" class="btn-primary form-submit">Send My Order ✦</button>
-        <p class="form-note">We'll confirm via WhatsApp or email within a few hours.</p>
+        <div class="fgrp"><label>Special Requests</label><textarea placeholder="Dietary needs, pickup time, custom message…"></textarea></div>
+        <button type="submit" class="btn btn-amber fsub">Send My Order ✦</button>
+        <p class="fnote">We'll confirm via WhatsApp or email within a few hours.</p>
       </form>
-      <div class="order-success" id="orderSuccess">
-        <div class="success-icon">🍂</div>
-        <h3>Order received!</h3>
-        <p>We'll be in touch shortly to confirm. See you soon at Maplewood.</p>
-      </div>
+      <div class="suc" id="suc"><div class="sico">🍂</div><h3>Order received!</h3><p>We'll be in touch shortly. See you soon at Maplewood.</p></div>
     </div>
   </div>
 </section>
 
 <!-- NEWSLETTER -->
-<section class="newsletter-section">
-  <div class="newsletter-inner">
-    <div class="nl-leaf-deco">🍂</div>
-    <h2 class="nl-title">Stay in the loop.</h2>
-    <p class="nl-sub">New menu items, seasonal specials & the occasional secret recipe — straight to your inbox.</p>
-    <form class="nl-form" id="nlForm">
+<section class="nl">
+  <div class="nl-in">
+    <h2>Stay in the loop.</h2>
+    <p>New menu drops, seasonal specials & exclusive offers — straight to your inbox.</p>
+    <form class="nl-form" id="nlF">
       <input type="email" placeholder="your@email.com" required>
       <button type="submit">Subscribe ✦</button>
     </form>
-    <p class="nl-note" id="nlThanks" style="display:none;">You're on the list! 🍂 Good things coming your way.</p>
+    <p class="nl-thanks" id="nlT" style="display:none;">You're on the list! 🍂 Good things are coming.</p>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <span class="footer-logo">🍂 Maplewood Bakery</span>
-      <p>Baked with forest magic since 2019.</p>
-    </div>
-    <div class="footer-links">
-      <a href="#about">Our Story</a>
-      <a href="#menu">Menu</a>
-      <a href="#gallery">Kitchen</a>
-      <a href="#order">Order</a>
-    </div>
-    <div class="footer-social">
-      <a href="#" class="social-link">Instagram</a>
-      <a href="#" class="social-link">WhatsApp</a>
-    </div>
+  <div class="footer-top">
+    <div class="footer-brand"><span class="f-logo">🍂 Maplewood Bakery</span><p>Baked with forest magic since 2019.<br>Maplewood Town.</p></div>
+    <div class="fcol"><h4>Navigate</h4><a href="#about">Our Story</a><a href="#menu">Menu</a><a href="#gallery">Kitchen</a><a href="#order">Order</a></div>
+    <div class="fcol"><h4>Connect</h4><a href="#">Instagram</a><a href="#">WhatsApp</a><a href="mailto:hello@maplewoodbakery.com">Email Us</a></div>
   </div>
-  <div class="footer-bottom">
-    <p>© 2025 Maplewood Bakery · Made with 🤍 & a lot of butter</p>
-  </div>
+  <div class="footer-btm">© 2025 Maplewood Bakery · Made with 🤍 & a lot of butter</div>
 </footer>
 
-<script src="script.js"></script>
+<script>
+  // NAV SCROLL
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('stuck', window.scrollY > 50));
+
+  // HAMBURGER
+  const hbg = document.getElementById('hbg');
+  const mobnav = document.getElementById('mobnav');
+  let mopen = false;
+  hbg.addEventListener('click', () => {
+    mopen = !mopen;
+    mobnav.classList.toggle('open', mopen);
+    const sp = hbg.querySelectorAll('span');
+    if (mopen) { sp[0].style.transform='translateY(6.5px) rotate(45deg)'; sp[1].style.opacity='0'; sp[2].style.transform='translateY(-6.5px) rotate(-45deg)'; }
+    else { sp.forEach(s => { s.style.transform=''; s.style.opacity=''; }); }
+  });
+  document.querySelectorAll('.ml').forEach(l => l.addEventListener('click', () => {
+    mopen=false; mobnav.classList.remove('open');
+    hbg.querySelectorAll('span').forEach(s=>{ s.style.transform=''; s.style.opacity=''; });
+  }));
+
+  // REVEAL
+  const ro = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } }), { threshold:0.1 });
+  document.querySelectorAll('.rv').forEach(r => ro.observe(r));
+
+  // FILTER
+  document.querySelectorAll('.filt').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.filt').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const f = b.dataset.f;
+    document.querySelectorAll('.mcard').forEach(c => c.classList.toggle('off', f !== 'all' && c.dataset.cat !== f));
+  }));
+
+  // ORDER FORM
+  document.getElementById('oForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('.fsub');
+    btn.textContent='Sending…'; btn.disabled=true;
+    setTimeout(() => { document.getElementById('oForm').style.display='none'; document.getElementById('suc').classList.add('show'); }, 900);
+  });
+
+  // NEWSLETTER
+  document.getElementById('nlF').addEventListener('submit', e => {
+    e.preventDefault();
+    e.target.style.display='none';
+    document.getElementById('nlT').style.display='block';
+  });
+</script>
 </body>
 </html>
