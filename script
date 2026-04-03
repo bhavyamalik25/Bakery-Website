@@ -1,0 +1,236 @@
+/* =========================================
+   MAPLEWOOD BAKERY — JavaScript
+   ========================================= */
+
+// ---- CUSTOM CURSOR ----
+const cursor = document.getElementById('cursor');
+const cursorFollower = document.getElementById('cursorFollower');
+let mouseX = 0, mouseY = 0;
+let followerX = 0, followerY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top = mouseY + 'px';
+});
+
+function animateFollower() {
+  followerX += (mouseX - followerX) * 0.1;
+  followerY += (mouseY - followerY) * 0.1;
+  cursorFollower.style.left = followerX + 'px';
+  cursorFollower.style.top = followerY + 'px';
+  requestAnimationFrame(animateFollower);
+}
+animateFollower();
+
+const hoverTargets = document.querySelectorAll('a, button, .menu-card, .gallery-item, .value-pill, .filter-btn');
+hoverTargets.forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.classList.add('hovering');
+    cursorFollower.classList.add('hovering');
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.classList.remove('hovering');
+    cursorFollower.classList.remove('hovering');
+  });
+});
+
+
+// ---- HEADER SCROLL ----
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+
+// ---- HAMBURGER MENU ----
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+
+hamburger.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('open', menuOpen);
+  const spans = hamburger.querySelectorAll('span');
+  if (menuOpen) {
+    spans[0].style.transform = 'translateY(6.5px) rotate(45deg)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'translateY(-6.5px) rotate(-45deg)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+});
+
+document.querySelectorAll('.mm-link').forEach(link => {
+  link.addEventListener('click', () => {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+    const spans = hamburger.querySelectorAll('span');
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  });
+});
+
+
+// ---- SCROLL REVEAL ----
+const revealEls = document.querySelectorAll('.reveal-up');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+revealEls.forEach(el => revealObserver.observe(el));
+
+// Hero reveals on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.hero .reveal-up').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 200 + i * 150);
+  });
+});
+
+
+// ---- MENU FILTER ----
+const filterBtns = document.querySelectorAll('.filter-btn');
+const menuCards = document.querySelectorAll('.menu-card');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    menuCards.forEach(card => {
+      if (filter === 'all' || card.dataset.cat === filter) {
+        card.classList.remove('hidden');
+        card.style.animation = 'none';
+        card.offsetHeight;
+        card.style.animation = 'cardFadeIn 0.4s ease forwards';
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+
+// Inject keyframe for card filter
+const style = document.createElement('style');
+style.textContent = '@keyframes cardFadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }';
+document.head.appendChild(style);
+
+
+// ---- ORDER FORM ----
+const orderForm = document.getElementById('orderForm');
+const orderSuccess = document.getElementById('orderSuccess');
+
+orderForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const btn = orderForm.querySelector('.form-submit');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  setTimeout(() => {
+    orderForm.style.display = 'none';
+    orderSuccess.classList.add('show');
+  }, 1200);
+});
+
+
+// ---- NEWSLETTER ----
+const nlForm = document.getElementById('nlForm');
+const nlThanks = document.getElementById('nlThanks');
+
+nlForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  nlForm.style.display = 'none';
+  nlThanks.style.display = 'block';
+});
+
+
+// ---- FALLING LEAVES CANVAS ----
+const canvas = document.getElementById('leavesCanvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+const LEAF_CHARS = ['🍂', '🍁', '🍃'];
+const leaves = [];
+const LEAF_COUNT = 18;
+
+function Leaf() {
+  this.reset = function(initial) {
+    this.x = Math.random() * canvas.width;
+    this.y = initial ? Math.random() * canvas.height : -40;
+    this.size = 14 + Math.random() * 18;
+    this.speedY = 0.4 + Math.random() * 0.7;
+    this.speedX = (Math.random() - 0.5) * 0.6;
+    this.angle = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - 0.5) * 0.02;
+    this.opacity = 0.25 + Math.random() * 0.35;
+    this.char = LEAF_CHARS[Math.floor(Math.random() * LEAF_CHARS.length)];
+    this.sway = Math.random() * Math.PI * 2;
+    this.swaySpeed = 0.01 + Math.random() * 0.015;
+  };
+  this.reset(true);
+}
+
+for (let i = 0; i < LEAF_COUNT; i++) {
+  const l = new Leaf();
+  leaves.push(l);
+}
+
+function animateLeaves() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  leaves.forEach(leaf => {
+    leaf.sway += leaf.swaySpeed;
+    leaf.x += leaf.speedX + Math.sin(leaf.sway) * 0.4;
+    leaf.y += leaf.speedY;
+    leaf.angle += leaf.rotSpeed;
+    if (leaf.y > canvas.height + 40) leaf.reset(false);
+    ctx.save();
+    ctx.globalAlpha = leaf.opacity;
+    ctx.translate(leaf.x, leaf.y);
+    ctx.rotate(leaf.angle);
+    ctx.font = `${leaf.size}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(leaf.char, 0, 0);
+    ctx.restore();
+  });
+  requestAnimationFrame(animateLeaves);
+}
+animateLeaves();
+
+
+// ---- PARALLAX HERO BG TEXT ----
+const heroBgText = document.querySelector('.hero-bg-text');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  if (heroBgText && scrolled < window.innerHeight) {
+    heroBgText.style.transform = `translate(-50%, calc(-50% + ${scrolled * 0.3}px))`;
+  }
+});
+
+
+// ---- SMOOTH ACTIVE NAV ----
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active-link'));
+      const match = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+      if (match) match.classList.add('active-link');
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(s => sectionObserver.observe(s));
